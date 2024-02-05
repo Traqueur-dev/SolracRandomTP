@@ -1,11 +1,11 @@
 package fr.traqueur.solrac.randomtp.utils;
 
 
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import org.bukkit.entity.Player;
 
 public class CountdownUtils {
     private static HashMap<String, HashMap<UUID, Long>> countdowns = new HashMap<>();

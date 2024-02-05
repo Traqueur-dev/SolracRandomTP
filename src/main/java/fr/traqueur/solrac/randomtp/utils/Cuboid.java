@@ -1,20 +1,5 @@
 package fr.traqueur.solrac.randomtp.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
-import com.google.common.collect.Lists;
-
 public class Cuboid {
 	private String worldName;
 	private int x1;
