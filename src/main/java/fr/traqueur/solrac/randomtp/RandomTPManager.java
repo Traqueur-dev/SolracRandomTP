@@ -9,7 +9,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -23,6 +25,8 @@ public class RandomTPManager {
     private SolracRandomTP plugin;
 
     private ArrayList<UUID> waiterRandomTP;
+
+    private ArrayList<Material> badMaterials;
 
     private int RANDOMTP_COUNTDOWN;
     private int RANDOMTP_DELAY;
@@ -40,6 +44,12 @@ public class RandomTPManager {
     public RandomTPManager(SolracRandomTP plugin) {
         this.plugin = plugin;
         this.waiterRandomTP = new ArrayList<>();
+        this.badMaterials = new ArrayList<>();
+
+        this.badMaterials.add(Material.LAVA);
+        this.badMaterials.add(Material.WATER);
+        this.badMaterials.add(Material.FIRE);
+        this.badMaterials.add(Material.CACTUS);
     }
 
     public void init() {
@@ -100,7 +110,21 @@ public class RandomTPManager {
 
     private boolean verifyLocation(World world, int x, int z) {
         Cuboid cuboid = new Cuboid(world.getName(), RANDOMTP_XMIN, -64, RANDOMTP_ZMIN, RANDOMTP_XMAX, 319, RANDOMTP_ZMAX);
-        return !cuboid.contains(x,0,z);
+
+        int y = world.getHighestBlockYAt(x, z) + 1;
+        Location location = new Location(world, x, y, z);
+        Block block = location.getWorld().getBlockAt(x, y, z);
+        Block below = location.getWorld().getBlockAt(x, y - 1, z);
+        Block above = location.getWorld().getBlockAt(x, y + 1, z);
+
+        boolean isSafe = !(this.badMaterials.contains(above.getType()))
+                && !(this.badMaterials.contains(block.getType()))
+                && !(this.badMaterials.contains(below.getType()))
+                && !(above.getType().isSolid())
+                && !(block.getType().isSolid())
+                && below.getType().isSolid();
+
+        return isSafe && !cuboid.contains(x,0,z);
     }
 
     public int getRANDOMTP_DELAY() {
